@@ -1,2 +1,2 @@
-# corgi_flask
+# Corgi Flask
 Example flask app with SQLite corgis.db
