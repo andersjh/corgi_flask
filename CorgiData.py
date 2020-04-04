@@ -62,6 +62,7 @@ class CorgiData():
         """
         return [self.object_as_dict(row) for row in cur_query]
 
+    #ORM approach
     def get_pet_data(self, name=""):
         session = Session(self.engine)
         if name == "":
@@ -72,6 +73,7 @@ class CorgiData():
         session.close()
         return self.query_to_list_of_dicts(results)    
 
+    # sql engine approach
     def get_pet_training_data(self, name=""):
         if name == "":
             sql = "select * from pet_training"
