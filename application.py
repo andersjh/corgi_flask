@@ -1,6 +1,6 @@
 # dependencies
 from CorgiData import CorgiData
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 #################################################
 # Database Setup
@@ -38,7 +38,14 @@ def get_one_pet(pet_name):
 
 @app.route("/api/v1.0/pet_training")
 def get_all_training():
-    return jsonify(cg.get_pet_training_data())
+    cur_args = request.args
+    if len(cur_args) == 0:
+        return jsonify(cg.get_pet_training_data())
+    else:
+        args_dict = { key: value for key, value in cur_args.items()}
+        print("args_dict\n", args_dict)
+        return jsonify(cg.get_pet_training_orm(args_dict))
+
 
 @app.route("/api/v1.0/pet_training/<pet_name>")
 def get_one_training(pet_name):

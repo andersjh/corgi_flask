@@ -5,6 +5,7 @@ import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, inspect, join, outerjoin
+from sqlalchemy import Table, MetaData, func
 
 class CorgiData():
 
@@ -18,6 +19,8 @@ class CorgiData():
         self.Base.prepare(self.engine, reflect=True)
         # self.Grades = self.Base.classes['grades']
         self.Pets = self.Base.classes['pets']
+        self.meta = MetaData()
+        self.PetTraining = Table('pet_training', self.meta, autoload_with=self.engine)
         # self.Training = self.Base.classes['training']
         # self.session = Session(self.engine)
 
@@ -32,6 +35,8 @@ class CorgiData():
             for column in self.inspector.get_columns(table):
                 print(f"name: {column['name']}   column type: {column['type']}")
 
+
+    
     # idea base from: https://riptutorial.com/sqlalchemy/example/6614/converting-a-query-result-to-dict
     def object_as_dict(self, obj):
         """
@@ -55,13 +60,25 @@ class CorgiData():
                 base_dict = {**base_dict, **cur_dict} 
             return base_dict                 
 
-    # from jeff LOL
+    # From Jeff LOL
     def query_to_list_of_dicts(self, cur_query):
         """
         From a query object return a list of dictionaries
         """
         return [self.object_as_dict(row) for row in cur_query]
 
+    # list of tuples converted to list of dictionaries
+    def list_tuple_to_list_dict(self, cols, rows):
+        """
+        Take a list of tuples and return a list of dicts
+        """
+        dict_rows = []
+        for row in rows:
+            dict_rows.append({ cols[i]: row[i] for i in range(len(cols))})
+        return dict_rows    
+
+    
+    
     #ORM approach
     def get_pet_data(self, name=""):
         session = Session(self.engine)
@@ -72,6 +89,8 @@ class CorgiData():
             
         session.close()
         return self.query_to_list_of_dicts(results)    
+
+    
 
     # sql engine approach
     def get_pet_training_data(self, name=""):
@@ -84,7 +103,28 @@ class CorgiData():
         conn = self.engine.connect()
         training_df = pd.read_sql(sql, conn) 
         conn.close()
-        return training_df.to_dict(orient='records')           
+        return training_df.to_dict(orient='records')  
+
+    # use ORM to dynamically create query from query parms
+    def get_pet_training_orm(self, parm_dict):
+        session = Session(self.engine)
+        table_columns = [c.name for c in self.PetTraining.columns]
+
+        results = session.query(self.PetTraining)
+        for k, v in parm_dict.items():
+            if k == 'name':
+                results = results.filter_by(name = v)
+            elif k == 'grade':
+                v = v.upper()
+                results = results.filter_by(grade = v) 
+            elif k == 'task':
+                results = results.filter_by(task = v )    
+
+        results = results.all()
+        results = self.list_tuple_to_list_dict(table_columns, results)
+        session.close()
+        return results
+           
 
 if __name__ == '__main__':
     corgies = CorgiData("sqlite:///corgies.db")
