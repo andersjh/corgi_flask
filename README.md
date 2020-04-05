@@ -12,4 +12,4 @@ Example flask app with SQLite corgis.db
 - Filters are being dymically applied based on optional arguments
 - The function that is built by the @app.route decorator can do so much more than you realize.  It can be quite complex and send the data retrievel to a toatally different function. You route function can do all kinds of things depending on your objectives
 
-[https://github.com/andersjh/corgi_flask.git](code sample with zip to load to AWS)
+[https://github.com/andersjh/corgi_flask.git] (code sample with zip to load to AWS)
