@@ -1,7 +1,7 @@
 # Corgi Flask
 Example flask app with SQLite corgis.db
 
-## Featres
+## Features
 - This app show of to of methods and ideas about ot to break apart yout big project into smaller resuable building blocks.
 - Uses ORM and execution modes of SQLAlchemdy
 - Shows you routes with variable
