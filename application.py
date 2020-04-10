@@ -1,5 +1,7 @@
 # dependencies
-from CorgiData import CorgiData
+# from CorgiData import CorgiData
+from CorgieDataPandas import CorgiDataPandas as CorgiData
+
 from flask import Flask, jsonify, request
 
 #################################################
