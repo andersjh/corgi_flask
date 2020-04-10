@@ -12,4 +12,9 @@ Example flask app with SQLite corgis.db
 - Filters are being dymically applied based on optional arguments
 - The function that is built by the @app.route decorator can do so much more than you realize.  It can be quite complex and send the data retrievel to a toatally different function. You route function can do all kinds of things depending on your objectives
 
+## Just added 4/10/2020
+- Used Class Inheritance to create a new class called CorgiDataPands.  
+- This class overwrites functions that were not using Pandas to create a dataframe
+- Note the commented and uncommented dependencies.  You can see how with one line of code, all changees are made
+
 [Download the Code](https://github.com/andersjh/corgi_flask.git)
